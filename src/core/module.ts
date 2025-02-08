@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
-import { DeFiController } from './defi.controller';
-import { DeFiService } from './defi.service';
-import { DeFiAgent } from './defi.agent';
+import { DeFiController } from './controller';
+import { DeFiService } from './service';
+import { DeFiAgent } from './agent';
 
 @Module({
   controllers: [DeFiController],

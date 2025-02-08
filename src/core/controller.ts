@@ -1,6 +1,6 @@
 import { Controller, Post, Body } from '@nestjs/common';
-import { DeFiService } from './defi.service';
-import { ProtocolData, BridgeInfo } from './types/protocol.types';
+import { DeFiService } from './service';
+import { ProtocolData, BridgeInfo } from '../types/protocol';
 
 @Controller('defi')
 export class DeFiController {

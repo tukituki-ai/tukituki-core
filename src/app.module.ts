@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { DeFiModule } from './defi/defi.module';
+import { DeFiModule } from './core/module';
 
 @Module({
   imports: [

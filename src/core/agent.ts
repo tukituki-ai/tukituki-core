@@ -1,4 +1,5 @@
 import OpenAI from 'openai';
+import { Injectable } from '@nestjs/common';
 import { 
   ProtocolData, 
   BridgeInfo, 
@@ -7,15 +8,20 @@ import {
 } from '../types/protocol';
 import { SYSTEM_PROMPT } from '../prompts/system';
 import { formatMarketDataPrompt, VALIDATION_PROMPT } from '../prompts/market';
+import { ConfigService } from '@nestjs/config';
 
+@Injectable()
 export class DeFiAgent {
   private openai: OpenAI;
+  model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 
-  constructor(apiKey: string) {
+  constructor(private configService: ConfigService) {
+    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
+    if (!apiKey) {
+      throw new Error('OPENAI_API_KEY not found');
+    }
     this.openai = new OpenAI({ apiKey });
   }
-
-  model = process.env.OPENAI_MODEL || 'gpt-4-turbo-preview';
 
   async getStrategyRecommendation(
     protocolData: ProtocolData[], 

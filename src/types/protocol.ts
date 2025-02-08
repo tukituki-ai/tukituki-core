@@ -17,23 +17,14 @@ export interface BridgeInfo {
   bridgeFee: string;
 }
 
-export type ActionType = 'supply' | 'borrow' | 'bridge' | 'none';
-
 export interface AgentResponse {
-  action: ActionType;
+  action: 'supply' | 'borrow' | 'none';
   protocol: string;
   chain: string;
-  targetChain?: string; // for bridge actions
   asset: string;
   amount: string;
   reason: string;
   estimatedAPY: number;
-  estimatedGas?: string;
-  bridgeDetails?: {
-    bridge: string;
-    estimatedTime: string;
-    fee: string;
-  };
 }
 
 export interface RiskAssessment {

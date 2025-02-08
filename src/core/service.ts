@@ -1,18 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DeFiAgent } from './defi.agent';
-import { ProtocolData, BridgeInfo, AgentResponse, RiskAssessment } from './types/protocol.types';
+import { DeFiAgent } from './agent';
+import { ProtocolData, BridgeInfo, AgentResponse, RiskAssessment } from '../types/protocol';
 
 @Injectable()
 export class DeFiService {
   private readonly agent: DeFiAgent;
 
   constructor(private configService: ConfigService) {
-    const apiKey = this.configService.get<string>('OPENAI_API_KEY');
-    if (!apiKey) {
-      throw new Error('OPENAI_API_KEY not found');
-    }
-    this.agent = new DeFiAgent(apiKey);
+    this.agent = new DeFiAgent(this.configService);
   }
 
   async getStrategy(
