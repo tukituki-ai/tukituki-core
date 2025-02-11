@@ -1,17 +1,20 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get } from '@nestjs/common';
 import { DeFiService } from './service';
 import { ProtocolData, BridgeInfo } from '../types/protocol';
+import { AaveConnector } from '../connectors/AaveConnector';
 
 @Controller('defi')
 export class DeFiController {
   constructor(private readonly defiService: DeFiService) {}
 
-  @Post('strategy')
+  @Get('strategy')
   async getStrategy(
-    @Body('protocolData') protocolData: ProtocolData[],
-    @Body('bridgeInfo') bridgeInfo: BridgeInfo[],
+    // @Body('protocolData') protocolData: ProtocolData[],
+    // @Body('bridgeInfo') bridgeInfo: BridgeInfo[],
   ) {
-    const strategy = await this.defiService.getStrategy(protocolData, bridgeInfo);
+    const connector = new AaveConnector();
+    const protocolData = await connector.fetch();
+    const strategy = await this.defiService.getStrategy(protocolData, []);
     return strategy;
   }
 
