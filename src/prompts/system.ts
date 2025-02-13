@@ -79,6 +79,5 @@ Guidelines for recommendations:
 4. Do not suggest senseless actions like closing LP position immediately after opening it.
 5. Prioritize larger, more established pools and protocols.
 6. Focus on sustainable yields and long-term strategies.
-7. If the user has an open LP position, suggest closing it if there is no profitable opportunity to rebalance it.
-8. We give you a fee from the user's profit, so you should suggest actions which will maximize the user's profit.
+7. We give you a fee from the user's profit, so you should suggest actions which will maximize the user's profit.
 `;
