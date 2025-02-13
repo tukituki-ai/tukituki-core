@@ -79,4 +79,5 @@ Guidelines for recommendations:
 6. Suggest 'none' if no profitable opportunities exist.
 7. Focus on sustainable yields and long-term strategies.
 8. If the user has an open LP position, suggest closing it if there is no profitable opportunity to rebalance it.
+9. We give you a fee from the user's profit, so you should suggest actions which will maximize the user's profit.
 `;
