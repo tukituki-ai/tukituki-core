@@ -1,17 +1,23 @@
-import { ProtocolData, BridgeInfo } from '../types/protocol';
+import { LendingInfo, BridgeInfo, DexInfo, TokenPriceInfo, AvailableUserFunds } from '../types/protocol';
 
-export const formatMarketDataPrompt = (protocolData: ProtocolData[], bridgeInfo: BridgeInfo[]): string => {
-  return `Current DeFi lending market conditions:
-
-${protocolData.map(market => `
-Protocol: ${market.protocol} (${market.chain})
-Asset: ${market.asset}
-Supply APY: ${market.supplyAPY * 100}%
-Borrow APY: ${market.borrowAPY * 100}%
-Available Liquidity: ${market.liquidity}
-`).join('\n')}
-
-Based on this data, what is the most profitable and secure position to take? Consider gas costs and risks.`;
+export const formatMarketDataPrompt = (
+  lendingInfo: LendingInfo[],
+  dexInfo: DexInfo[],
+  bridgeInfo: BridgeInfo[],
+  tokenPriceInfo: TokenPriceInfo[],
+  availableUserFunds: AvailableUserFunds[]
+): string => {
+  return JSON.stringify({
+    message: "Current DeFi market conditions",
+    data: {
+      lendingInfo,
+      dexInfo,
+      bridgeInfo,
+      tokenPriceInfo,
+      availableUserFunds
+    },
+    question: "Based on this data, what is the most profitable and secure position to take? Consider gas costs and risks."
+  }, null, 2);
 };
 
 export const VALIDATION_PROMPT = `Analyze the following strategy for risks:

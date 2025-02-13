@@ -1,6 +1,5 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
 import { DeFiService } from './service';
-import { ProtocolData, BridgeInfo } from '../types/protocol';
 import { AaveConnector } from '../connectors/AaveConnector';
 
 @Controller('defi')
@@ -13,8 +12,8 @@ export class DeFiController {
     // @Body('bridgeInfo') bridgeInfo: BridgeInfo[],
   ) {
     const connector = new AaveConnector();
-    const protocolData = await connector.fetch();
-    const strategy = await this.defiService.getStrategy(protocolData, []);
+    const lendingInfo = await connector.fetch();
+    const strategy = await this.defiService.getStrategy(lendingInfo, [], [], [], []);
     return strategy;
   }
 

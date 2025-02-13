@@ -1,10 +1,13 @@
 import OpenAI from 'openai';
 import { Injectable } from '@nestjs/common';
 import { 
-  ProtocolData, 
   BridgeInfo, 
   AgentResponse, 
-  RiskAssessment 
+  RiskAssessment, 
+  LendingInfo,
+  DexInfo,
+  TokenPriceInfo,
+  AvailableUserFunds
 } from '../types/protocol';
 import { SYSTEM_PROMPT } from '../prompts/system';
 import { formatMarketDataPrompt, VALIDATION_PROMPT } from '../prompts/market';
@@ -24,10 +27,15 @@ export class DeFiAgent {
   }
 
   async getStrategyRecommendation(
-    protocolData: ProtocolData[], 
-    bridgeInfo: BridgeInfo[]
+    lendingInfo: LendingInfo[], 
+    dexInfo: DexInfo[], 
+    bridgeInfo: BridgeInfo[], 
+    tokenPriceInfo: TokenPriceInfo[],
+    availableUserFunds: AvailableUserFunds[]
   ): Promise<AgentResponse> {
     try {
+      const requestBody = formatMarketDataPrompt(lendingInfo, dexInfo, bridgeInfo, tokenPriceInfo, availableUserFunds) + "\nRespond with a JSON object.";
+      console.log(requestBody);
       const completion = await this.openai.chat.completions.create({
         messages: [
           { 
@@ -36,7 +44,7 @@ export class DeFiAgent {
           },
           { 
             role: "user", 
-            content: formatMarketDataPrompt(protocolData, bridgeInfo) + "\nRespond with a JSON object." 
+            content: requestBody
           }
         ],
         model: this.model,

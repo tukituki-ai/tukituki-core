@@ -1,46 +1,22 @@
 import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import { ethers } from 'ethers';
-import { ProtocolData } from '../types/protocol';
-import { Connector } from './Connector';
-import { ASSETS, CHAINS } from './config';
+import { LendingInfo } from '../types/protocol';
+import { AAVE_LENDING_POOL_ADDRESS_PROVIDER, AAVE_UI_POOL_DATA_PROVIDER, CHAINS } from './config';
 
 dotenv.config();
 
-function getChainMetadata(chain: string): {
-    uiPoolDataProviderAddress: string;
-    lendingPoolAddressProvider: string;
-} {
-    const lendingPoolAddressProvider = "0xa97684ead0e402dC232d5A977953DF7ECBaB3CDb";
-    switch (chain) {
-        case 'arbitrum':
-            return {
-                uiPoolDataProviderAddress: "0x5c5228aC8BC1528482514aF3e27E692495148717",
-                lendingPoolAddressProvider,
-            }
-        case 'optimism':
-            return {
-                uiPoolDataProviderAddress: "0xE92cd6164CE7DC68e740765BC1f2a091B6CBc3e4",
-                lendingPoolAddressProvider,
-            }
-        case 'avalanche':
-            return {
-                uiPoolDataProviderAddress: "0x50B4a66bF4D41e6252540eA7427D7A933Bc3c088",
-                lendingPoolAddressProvider,
-            }
-        default:
-            throw new Error(`Unsupported chain: ${chain}`);
-    }
-}
+export class AaveConnector {
+    async fetch(): Promise<LendingInfo[]> {
+        const results: LendingInfo[] = [];
 
-export class AaveConnector implements Connector {
-    async fetch(): Promise<ProtocolData[]> {
-        const results: ProtocolData[] = [];
-    
+
         for (const chain of CHAINS) {
-            const provider = new ethers.JsonRpcProvider(process.env[`RPC_URL_${chain.toUpperCase()}`]);
-            const { uiPoolDataProviderAddress, lendingPoolAddressProvider } = getChainMetadata(chain);      
-            const abiFilePath = "abi/aave/IUiPoolDataProviderV3.sol";
+            const lendingPoolAddressProvider = AAVE_LENDING_POOL_ADDRESS_PROVIDER;
+            const uiPoolDataProviderAddress = AAVE_UI_POOL_DATA_PROVIDER[chain as keyof typeof AAVE_UI_POOL_DATA_PROVIDER];
+            
+            const provider = new ethers.JsonRpcProvider(process.env[`RPC_URL_${chain.toUpperCase()}`]); 
+            const abiFilePath = "abi/aave/IUiPoolDataProviderV3.json";
             const abi = JSON.parse(fs.readFileSync(abiFilePath, 'utf8'));
             const uiPoolDataProvider = new ethers.Contract(uiPoolDataProviderAddress, abi, provider);
     
@@ -50,18 +26,17 @@ export class AaveConnector implements Connector {
                 console.log(ethers.formatUnits(token[15], 27));
                 console.log(ethers.formatUnits(token[21], token[3]));
                 results.push({
-                    protocol: "aave",
                     chain: chain,
-                    asset: token[0],
-                    symbol: token[2],
+                    lending: "aave",
+                    asset: token[2],
                     supplyAPY: Number(ethers.formatUnits(token[14], 27)),
                     borrowAPY: Number(ethers.formatUnits(token[15], 27)),
                     liquidity: Number(ethers.formatUnits(token[21], token[3])),
                     timestamp: Date.now(),
+                    userLendingInfo: undefined,
                 });
             }
         }
-        console.log(results);
         return results;
     }
 }
