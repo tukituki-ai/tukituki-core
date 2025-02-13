@@ -1,0 +1,37 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model UserMultisig {
+  id              String   @id @default(uuid())
+  userAddress     String // The user's wallet address
+  multisigAddress String // The deployed multisig address
+  chain           Chain // The chain where the multisig is deployed
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Optional: ensure that a given user wallet has one multisig per chain.
+  @@unique([userAddress, chain])
+  // Optional: ensure that each multisig address is unique per chain.
+  @@unique([multisigAddress, chain])
+}
+
+enum Chain {
+  OPTIMISM
+  BASE
+  LINEA
+  ARBITRUM
+  AVALANCHE
+}
