@@ -16,7 +16,7 @@ export class DeFiService {
     dexInfo: DexInfo[],
     bridgeInfo: BridgeInfo[],
     tokenAmountInfo: TokenAmountInfo[]
-  ): Promise<AgentResponse> {
+  ): Promise<boolean> {
     return this.agent.getStrategyRecommendation(lendingInfo, dexInfo, bridgeInfo, tokenAmountInfo);
   }
 

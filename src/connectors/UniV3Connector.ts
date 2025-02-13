@@ -1,6 +1,6 @@
 import * as dotenv from 'dotenv';
 import { DexInfo } from '../types/protocol';
-import { CHAINS, POOLS_NUMBER } from './config';
+import { ASSETS, CHAINS, POOLS_NUMBER } from './config';
 
 dotenv.config();
 
@@ -46,6 +46,12 @@ export class UniV3Connector {
 
             const response = await rawResponse.json();
             for (const pool of response.data.topV3Pools) {
+                if (!ASSETS[chain as keyof typeof ASSETS].filter(_asset => _asset.toLowerCase() === pool.token0.address.toLowerCase()).length) {
+                    continue;
+                }
+                if (!ASSETS[chain as keyof typeof ASSETS].filter(_asset => _asset.toLowerCase() === pool.token1.address.toLowerCase()).length) {
+                    continue;
+                }
                 results.push({
                     chain,
                     dex: "uniswap_v3",

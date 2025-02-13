@@ -2,7 +2,7 @@ import * as dotenv from 'dotenv';
 import * as fs from 'fs';
 import { ethers } from 'ethers';
 import { LendingInfo } from '../types/protocol';
-import { AAVE_LENDING_POOL_ADDRESS_PROVIDER, AAVE_UI_POOL_DATA_PROVIDER, CHAINS } from './config';
+import { AAVE_LENDING_POOL_ADDRESS_PROVIDER, AAVE_UI_POOL_DATA_PROVIDER, ASSETS, CHAINS } from './config';
 
 dotenv.config();
 
@@ -21,12 +21,16 @@ export class AaveConnector {
     
             const reservesData = await uiPoolDataProvider.getReservesData(lendingPoolAddressProvider);
             for (const token of reservesData[0]) {
+                const asset = token[0];
+                if (!ASSETS[chain as keyof typeof ASSETS].filter(_asset => _asset.toLowerCase() === asset.toLowerCase()).length) {
+                    continue;
+                }
                 results.push({
                     chain: chain,
                     lending: "aave",
                     token: {
                         chain: chain,
-                        asset: token[0],
+                        asset,
                         symbol: token[2],
                         decimals: Number(token[3]),
                     },

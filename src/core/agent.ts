@@ -30,14 +30,14 @@ export class DeFiAgent {
     dexInfo: DexInfo[], 
     bridgeInfo: BridgeInfo[], 
     tokenAmountInfo: TokenAmountInfo[]
-  ): Promise<AgentResponse> {
+  ): Promise<boolean> {
     try {
-      console.log(lendingInfo);
+      // console.log(lendingInfo);
       // console.log(dexInfo);
       // console.log(bridgeInfo);
       // console.log(tokenAmountInfo);
       const requestBody = formatMarketDataPrompt(lendingInfo, dexInfo, bridgeInfo, tokenAmountInfo) + "\nRespond with a JSON object.";
-      console.log(requestBody);
+      // console.log(requestBody);
       const completion = await this.openai.chat.completions.create({
         messages: [
           { 
@@ -53,9 +53,14 @@ export class DeFiAgent {
         response_format: { type: "json_object" }
       });
 
-      const response = JSON.parse(completion.choices[0].message.content || '{}') as AgentResponse;
-      console.log("Agent response:", response);
-      return response;
+      const response = JSON.parse(completion.choices[0].message.content || '{}');
+      console.log("Agent response:");
+      if (response.actions) {
+        for (const action of response.actions) {
+          console.log(action);
+        }
+      }
+      return true;
     } catch (error) {
       console.error('Error getting strategy:', error);
       throw error;

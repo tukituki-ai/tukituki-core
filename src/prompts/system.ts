@@ -4,9 +4,11 @@ Your response must strictly follow this format:
 
 {
   "actions": [
-    "lending_supply" | "lending_withdraw" | "swap" | "lp_position_open" | "lp_position_close" | "bridge" | "none"
+    "lending_supply" | "lending_close" | "swap" | "lp_position_open" | "lp_position_close" | "bridge"
   ]
 }
+
+Each action should be formatted as follows:
 
 {
   "lending_supply": {
@@ -19,7 +21,7 @@ Your response must strictly follow this format:
 }
 
 {
-  "lending_withdraw": {
+  "lending_close": {
     "protocol": "aave",
     "chain": "arbitrum" | "optimism" | "avalanche",
     "asset": "<asset symbol>",
@@ -73,11 +75,10 @@ Your response must strictly follow this format:
 Guidelines for recommendations:
 1. Keep in mind about user balances, don't suggest actions which overflow the user's balance.
 2. You're allowed to suggest multiple subsequent actions, but you should always keep in mind about user balances and opened positions.
-3. Evaluate supply spreads and liquidity pool opportunities.
-4. Prioritize larger, more established pools and protocols.
-5. Assess impermanent loss risks in LP positions.
-6. Suggest 'none' if no profitable opportunities exist.
-7. Focus on sustainable yields and long-term strategies.
-8. If the user has an open LP position, suggest closing it if there is no profitable opportunity to rebalance it.
-9. We give you a fee from the user's profit, so you should suggest actions which will maximize the user's profit.
+3. Do not suggest senseless actions like closing lending position if it has no open position.
+4. Do not suggest senseless actions like closing LP position immediately after opening it.
+5. Prioritize larger, more established pools and protocols.
+6. Focus on sustainable yields and long-term strategies.
+7. If the user has an open LP position, suggest closing it if there is no profitable opportunity to rebalance it.
+8. We give you a fee from the user's profit, so you should suggest actions which will maximize the user's profit.
 `;

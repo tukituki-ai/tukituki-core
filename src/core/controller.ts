@@ -2,6 +2,7 @@ import { Controller, Post, Body, Get } from '@nestjs/common';
 import { DeFiService } from './service';
 import { AaveConnector } from '../connectors/AaveConnector';
 import { UniV3Connector } from 'src/connectors/UniV3Connector';
+import { CoinGeckoConnector } from 'src/connectors/CoinGeckoConnector';
 
 @Controller('defi')
 export class DeFiController {
@@ -14,6 +15,7 @@ export class DeFiController {
   ) {
     const lendingInfo = await new AaveConnector().fetch();
     const dexInfo = await new UniV3Connector().fetch();
+    const tokenAmountInfo = await new CoinGeckoConnector().fetch();
     const strategy = await this.defiService.getStrategy(lendingInfo, dexInfo, [], []);
     return null;
   }

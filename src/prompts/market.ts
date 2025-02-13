@@ -16,7 +16,6 @@ export const formatMarketDataPrompt = (
         supplyAPY: (info.supplyAPY * 100).toFixed(2).toString() + '%',
         borrowAPY: (info.borrowAPY * 100).toFixed(2).toString() + '%',
         liquidityUSD: Math.round(info.liquidity),
-        timestamp: info.timestamp,
         userLendingInfo: info.userLendingInfo
       })),
       dexInfo: dexInfo.map(info => ({
@@ -27,13 +26,17 @@ export const formatMarketDataPrompt = (
         fee: info.fee,
         tvlUSD: Math.round(info.tvl),
         volume24hUSD: Math.round(info.volume_24h),
-        timestamp: info.timestamp,
         userDexInfo: info.userDexInfo
       })),
       bridgeInfo,
-      tokenAmountInfo
+      tokenAmountInfo: tokenAmountInfo.map(info => ({
+        chain: info.token.chain,
+        symbol: info.token.symbol,
+        price: info.price,
+        amount: info.amount
+      }))
     },
-    question: "Based on this data, what is the most profitable and secure position to take? Consider gas costs and risks."
+    question: "Based on this data, what is the most profitable and secure positions to take? Consider fees and risks."
   }, null, 2);
 };
 
