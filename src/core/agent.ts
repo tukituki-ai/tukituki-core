@@ -6,8 +6,7 @@ import {
   RiskAssessment, 
   LendingInfo,
   DexInfo,
-  TokenPriceInfo,
-  AvailableUserFunds
+  TokenAmountInfo
 } from '../types/protocol';
 import { SYSTEM_PROMPT } from '../prompts/system';
 import { formatMarketDataPrompt, VALIDATION_PROMPT } from '../prompts/market';
@@ -30,11 +29,14 @@ export class DeFiAgent {
     lendingInfo: LendingInfo[], 
     dexInfo: DexInfo[], 
     bridgeInfo: BridgeInfo[], 
-    tokenPriceInfo: TokenPriceInfo[],
-    availableUserFunds: AvailableUserFunds[]
+    tokenAmountInfo: TokenAmountInfo[]
   ): Promise<AgentResponse> {
     try {
-      const requestBody = formatMarketDataPrompt(lendingInfo, dexInfo, bridgeInfo, tokenPriceInfo, availableUserFunds) + "\nRespond with a JSON object.";
+      console.log(lendingInfo);
+      // console.log(dexInfo);
+      // console.log(bridgeInfo);
+      // console.log(tokenAmountInfo);
+      const requestBody = formatMarketDataPrompt(lendingInfo, dexInfo, bridgeInfo, tokenAmountInfo) + "\nRespond with a JSON object.";
       console.log(requestBody);
       const completion = await this.openai.chat.completions.create({
         messages: [
@@ -51,7 +53,9 @@ export class DeFiAgent {
         response_format: { type: "json_object" }
       });
 
-      return JSON.parse(completion.choices[0].message.content || '{}') as AgentResponse;
+      const response = JSON.parse(completion.choices[0].message.content || '{}') as AgentResponse;
+      console.log("Agent response:", response);
+      return response;
     } catch (error) {
       console.error('Error getting strategy:', error);
       throw error;

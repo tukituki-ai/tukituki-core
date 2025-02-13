@@ -25,8 +25,4 @@ export const AAVE_UI_POOL_DATA_PROVIDER = {
 }
 
 // UniV3
-export const UNISWAP_V3_FACTORY_ADDRESS = {
-  arbitrum: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
-  optimism: "0x1F98431c8aD98523631AE4a59f267346ea31F984",
-  avalanche: "0x740b1c1de25031C31FF4fC9A62f554A55cdC1baD",
-}
+export const POOLS_NUMBER = 10;

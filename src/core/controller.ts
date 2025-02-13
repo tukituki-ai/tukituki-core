@@ -1,6 +1,7 @@
 import { Controller, Post, Body, Get } from '@nestjs/common';
 import { DeFiService } from './service';
 import { AaveConnector } from '../connectors/AaveConnector';
+import { UniV3Connector } from 'src/connectors/UniV3Connector';
 
 @Controller('defi')
 export class DeFiController {
@@ -11,10 +12,10 @@ export class DeFiController {
     // @Body('protocolData') protocolData: ProtocolData[],
     // @Body('bridgeInfo') bridgeInfo: BridgeInfo[],
   ) {
-    const connector = new AaveConnector();
-    const lendingInfo = await connector.fetch();
-    const strategy = await this.defiService.getStrategy(lendingInfo, [], [], [], []);
-    return strategy;
+    const lendingInfo = await new AaveConnector().fetch();
+    const dexInfo = await new UniV3Connector().fetch();
+    const strategy = await this.defiService.getStrategy(lendingInfo, dexInfo, [], []);
+    return null;
   }
 
   @Post('validate')

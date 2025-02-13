@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DeFiAgent } from './agent';
-import { LendingInfo, DexInfo, BridgeInfo, TokenPriceInfo, AgentResponse, RiskAssessment, AvailableUserFunds } from '../types/protocol';
+import { LendingInfo, DexInfo, BridgeInfo, TokenAmountInfo, AgentResponse, RiskAssessment } from '../types/protocol';
 
 @Injectable()
 export class DeFiService {
@@ -15,10 +15,9 @@ export class DeFiService {
     lendingInfo: LendingInfo[],
     dexInfo: DexInfo[],
     bridgeInfo: BridgeInfo[],
-    tokenPriceInfo: TokenPriceInfo[],
-    availableUserFunds: AvailableUserFunds[]
+    tokenAmountInfo: TokenAmountInfo[]
   ): Promise<AgentResponse> {
-    return this.agent.getStrategyRecommendation(lendingInfo, dexInfo, bridgeInfo, tokenPriceInfo, availableUserFunds);
+    return this.agent.getStrategyRecommendation(lendingInfo, dexInfo, bridgeInfo, tokenAmountInfo);
   }
 
   async validateStrategy(strategy: AgentResponse): Promise<RiskAssessment> {

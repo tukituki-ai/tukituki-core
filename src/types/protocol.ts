@@ -1,3 +1,10 @@
+export interface TokenInfo {
+  chain: string;
+  asset: string;
+  symbol: string;
+  decimals: number;
+}
+
 export interface UserLendingInfo {
   amountSupplied: number;
   amountBorrowed: number;
@@ -12,7 +19,7 @@ export interface UserDexInfo {
 export interface LendingInfo {
   chain: string;
   lending: string;
-  asset: string;
+  token: TokenInfo;
   supplyAPY: number;
   borrowAPY: number;
   liquidity: number;
@@ -23,11 +30,10 @@ export interface LendingInfo {
 export interface DexInfo {
   chain: string;
   dex: string;
-  asset0: string;
-  asset1: string;
+  token0: TokenInfo;
+  token1: TokenInfo;
   fee: number;
   tvl: number;
-  apr: number;
   volume_24h: number;
   timestamp: number;
   userDexInfo: UserDexInfo | undefined;
@@ -36,23 +42,17 @@ export interface DexInfo {
 export interface BridgeInfo {
   fromChain: string;
   toChain: string;
-  asset: string;
+  token: TokenInfo;
   estimatedGas: string;
   bridgeTime: string;
   bridgeFee: string;
 }
 
-export interface TokenPriceInfo {
-  chain: string;
-  asset: string;
+export interface TokenAmountInfo {
+  token: TokenInfo;
   price: number;
-  timestamp: number;
-}
-
-export interface AvailableUserFunds {
-  chain: string;
-  asset: string;
   amount: number;
+  timestamp: number;
 }
 
 export interface AgentResponse {

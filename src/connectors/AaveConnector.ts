@@ -10,7 +10,6 @@ export class AaveConnector {
     async fetch(): Promise<LendingInfo[]> {
         const results: LendingInfo[] = [];
 
-
         for (const chain of CHAINS) {
             const lendingPoolAddressProvider = AAVE_LENDING_POOL_ADDRESS_PROVIDER;
             const uiPoolDataProviderAddress = AAVE_UI_POOL_DATA_PROVIDER[chain as keyof typeof AAVE_UI_POOL_DATA_PROVIDER];
@@ -22,13 +21,15 @@ export class AaveConnector {
     
             const reservesData = await uiPoolDataProvider.getReservesData(lendingPoolAddressProvider);
             for (const token of reservesData[0]) {
-                console.log(ethers.formatUnits(token[14], 27));
-                console.log(ethers.formatUnits(token[15], 27));
-                console.log(ethers.formatUnits(token[21], token[3]));
                 results.push({
                     chain: chain,
                     lending: "aave",
-                    asset: token[2],
+                    token: {
+                        chain: chain,
+                        asset: token[0],
+                        symbol: token[2],
+                        decimals: Number(token[3]),
+                    },
                     supplyAPY: Number(ethers.formatUnits(token[14], 27)),
                     borrowAPY: Number(ethers.formatUnits(token[15], 27)),
                     liquidity: Number(ethers.formatUnits(token[21], token[3])),
