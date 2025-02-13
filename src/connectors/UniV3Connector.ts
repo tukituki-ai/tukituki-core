@@ -48,7 +48,7 @@ export class UniV3Connector {
             for (const pool of response.data.topV3Pools) {
                 results.push({
                     chain,
-                    dex: "uniswap",
+                    dex: "uniswap_v3",
                     token0: {
                         chain,
                         asset: pool.token0.address,
