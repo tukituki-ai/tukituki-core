@@ -2,9 +2,10 @@ export interface ProtocolData {
   protocol: string;
   chain: string;
   asset: string;
+  symbol: string;
   supplyAPY: number;
   borrowAPY: number;
-  liquidity: string;
+  liquidity: number;
   timestamp: number;
 }
 

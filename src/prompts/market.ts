@@ -6,8 +6,8 @@ export const formatMarketDataPrompt = (protocolData: ProtocolData[], bridgeInfo:
 ${protocolData.map(market => `
 Protocol: ${market.protocol} (${market.chain})
 Asset: ${market.asset}
-Supply APY: ${market.supplyAPY}%
-Borrow APY: ${market.borrowAPY}%
+Supply APY: ${market.supplyAPY * 100}%
+Borrow APY: ${market.borrowAPY * 100}%
 Available Liquidity: ${market.liquidity}
 `).join('\n')}
 

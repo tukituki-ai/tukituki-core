@@ -1,6 +1,7 @@
 export const CHAINS = [
     'arbitrum',
     'optimism',
+    'avalanche',
 ];
 
 export const ASSETS = {
