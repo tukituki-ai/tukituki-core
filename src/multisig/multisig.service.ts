@@ -1,11 +1,14 @@
 import { Injectable } from "@nestjs/common";
-import { createSafeClient } from "@safe-global/sdk-starter-kit";
 import { Chain, RpcConfigService } from "src/connectors/rpcConfig.service";
 import { ConfigService } from "@nestjs/config";
 import { PrismaService } from "src/prisma/prisma.service";
-import Safe, { PredictedSafeProps, SafeAccountConfig } from "@safe-global/protocol-kit";
+import Safe from "@safe-global/protocol-kit";
 import { createPublicClient } from "viem";
 import { http } from "viem";
+import { OperationType } from "@safe-global/types-kit";
+import { MetaTransactionData } from "@safe-global/types-kit";
+import SafeApiKit from "@safe-global/api-kit";
+import { ethers } from "ethers";
 
 @Injectable()
 export class MultisigService {
@@ -73,8 +76,44 @@ export class MultisigService {
   }
 
   async getSafeClient(chain: Chain, userAddress: string) {
-    return this.prismaService.userMultisig.findUnique({
+    const safe = await this.prismaService.userMultisig.findUnique({
       where: { userAddress_chain: { userAddress, chain } },
+    });
+
+    if (!safe) {
+      throw new Error("Safe not found");
+    }
+
+    return safe.multisigAddress;
+  }
+
+  async proposeTransaction(chain: Chain, userAddress: string, transaction: MetaTransactionData) {
+    const safeAddress = await this.getSafeClient(chain, userAddress);
+
+    const protocolKitOwner = await Safe.init({
+      provider: this.rpcConfigService.getRpcUrl(chain),
+      signer: this.configService.get("AGENT_PRIVATE_KEY") as `0x${string}`,
+      safeAddress,
+    });
+
+    const safeTransaction = await protocolKitOwner.createTransaction({
+      transactions: [transaction],
+    });
+
+    const apiKit = new SafeApiKit({
+      chainId: BigInt(this.rpcConfigService.getChain(chain).id),
+    });
+
+    const safeTxHash = await protocolKitOwner.getTransactionHash(safeTransaction);
+
+    const senderSignature = await protocolKitOwner.signHash(safeTxHash);
+
+    await apiKit.proposeTransaction({
+      safeAddress,
+      safeTransactionData: safeTransaction.data,
+      safeTxHash,
+      senderAddress: this.configService.get("AGENT1_ADDRESS") as string,
+      senderSignature: senderSignature.data,
     });
   }
 }
