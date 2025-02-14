@@ -30,7 +30,7 @@ export class DeFiAgent {
     dexInfo: DexInfo[], 
     bridgeInfo: BridgeInfo[], 
     tokenAmountInfo: TokenAmountInfo[]
-  ): Promise<boolean> {
+  ): Promise<any> {
     try {
       // console.log(lendingInfo);
       // console.log(dexInfo);
@@ -42,7 +42,7 @@ export class DeFiAgent {
         messages: [
           { 
             role: "system", 
-            content: SYSTEM_PROMPT + "\nPlease provide your response in JSON format." 
+            content: SYSTEM_PROMPT + "\nPlease provide your response in a valid JSON format." 
           },
           { 
             role: "user", 
@@ -54,13 +54,7 @@ export class DeFiAgent {
       });
 
       const response = JSON.parse(completion.choices[0].message.content || '{}');
-      console.log("Agent response:");
-      if (response.actions) {
-        for (const action of response.actions) {
-          console.log(action);
-        }
-      }
-      return true;
+      return response;
     } catch (error) {
       console.error('Error getting strategy:', error);
       throw error;

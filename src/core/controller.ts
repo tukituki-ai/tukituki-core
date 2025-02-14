@@ -4,6 +4,7 @@ import { AaveConnector } from '../connectors/AaveConnector';
 import { UniV3Connector } from 'src/connectors/UniV3Connector';
 import { CoinGeckoConnector } from 'src/connectors/CoinGeckoConnector';
 import { ethers } from 'ethers';
+import { ActionHandler } from 'src/handlers/ActionHandler';
 
 @Controller('defi')
 export class DeFiController {
@@ -22,6 +23,7 @@ export class DeFiController {
     const publicKey = new ethers.Wallet(process.env.AGENT_PRIVATE_KEY).address;
     const tokensInfo = await new CoinGeckoConnector().fetch(publicKey);
     const strategy = await this.defiService.getStrategy(lendingInfo, dexInfo, [], tokensInfo);
+    await new ActionHandler().handle(strategy);
     return strategy;
   }
 
@@ -30,4 +32,4 @@ export class DeFiController {
     const assessment = await this.defiService.validateStrategy(strategy);
     return assessment;
   }
-} 
+}
