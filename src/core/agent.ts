@@ -37,7 +37,7 @@ export class DeFiAgent {
       // console.log(bridgeInfo);
       // console.log(tokenAmountInfo);
       const requestBody = formatMarketDataPrompt(lendingInfo, dexInfo, bridgeInfo, tokenAmountInfo) + "\nRespond with a JSON object.";
-      // console.log(requestBody);
+      console.log(requestBody);
       const completion = await this.openai.chat.completions.create({
         messages: [
           { 

@@ -33,7 +33,7 @@ export const formatMarketDataPrompt = (
         chain: info.token.chain,
         symbol: info.token.symbol,
         price: info.price,
-        amount: info.amount
+        amount: info.amount / 10 ** info.token.decimals
       }))
     },
     question: "Based on this data, what is the most profitable and secure positions to take? Consider fees and risks."

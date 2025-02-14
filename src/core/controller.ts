@@ -3,6 +3,7 @@ import { DeFiService } from './service';
 import { AaveConnector } from '../connectors/AaveConnector';
 import { UniV3Connector } from 'src/connectors/UniV3Connector';
 import { CoinGeckoConnector } from 'src/connectors/CoinGeckoConnector';
+import { ethers } from 'ethers';
 
 @Controller('defi')
 export class DeFiController {
@@ -15,9 +16,13 @@ export class DeFiController {
   ) {
     const lendingInfo = await new AaveConnector().fetch();
     const dexInfo = await new UniV3Connector().fetch();
-    const tokenAmountInfo = await new CoinGeckoConnector().fetch();
-    const strategy = await this.defiService.getStrategy(lendingInfo, dexInfo, [], []);
-    return null;
+    if (!process.env.AGENT_PRIVATE_KEY) {
+      throw new Error('AGENT_PRIVATE_KEY is not defined');
+    }
+    const publicKey = new ethers.Wallet(process.env.AGENT_PRIVATE_KEY).address;
+    const tokensInfo = await new CoinGeckoConnector().fetch(publicKey);
+    const strategy = await this.defiService.getStrategy(lendingInfo, dexInfo, [], tokensInfo);
+    return strategy;
   }
 
   @Post('validate')
