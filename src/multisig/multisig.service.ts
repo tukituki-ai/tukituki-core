@@ -101,6 +101,7 @@ export class MultisigService {
 
   async proposeTransaction(chain: Chain, userAddress: string, transaction: MetaTransactionData) {
     const safeAddress = await this.getSafeClient(chain, userAddress);
+    console.log("safeAddress:", safeAddress);
 
     const protocolKitOwner = await Safe.init({
       provider: this.rpcConfigService.getRpcUrl(chain),

@@ -16,6 +16,7 @@
     "test:cov": "jest --coverage"
   },
   "dependencies": {
+    "@1inch/cross-chain-sdk": "^0.1.10",
     "@cowprotocol/cow-sdk": "^5.10.0",
     "@ethersproject/providers": "^5.7.2",
     "@neondatabase/serverless": "^0.10.4",
@@ -38,7 +39,8 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
     "viem": "^2.23.2",
-    "ws": "^8.18.0"
+    "ws": "^8.18.0",
+    "web3": "^4.15.0"
   },
   "devDependencies": {
     "@nestjs/cli": "^10.0.0",

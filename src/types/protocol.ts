@@ -30,6 +30,7 @@ export interface LendingInfo {
 export interface DexInfo {
   chain: string;
   dex: string;
+  poolAddress: string;
   token0: TokenInfo;
   token1: TokenInfo;
   fee: number;
