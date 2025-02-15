@@ -28,6 +28,24 @@ model UserMultisig {
   @@unique([multisigAddress, chain])
 }
 
+model PendingTransaction {
+  id              String            @id @default(uuid())
+  multisigAddress String
+  chain           Chain
+  transactionHash String
+  status          TransactionStatus
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@unique([transactionHash])
+}
+
+enum TransactionStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
 enum Chain {
   OPTIMISM
   BASE

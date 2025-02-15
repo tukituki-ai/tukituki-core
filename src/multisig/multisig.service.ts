@@ -9,6 +9,7 @@ import { OperationType } from "@safe-global/types-kit";
 import { MetaTransactionData } from "@safe-global/types-kit";
 import SafeApiKit from "@safe-global/api-kit";
 import { ethers } from "ethers";
+import { TransactionStatus } from "@prisma/client";
 
 @Injectable()
 export class MultisigService {
@@ -114,6 +115,15 @@ export class MultisigService {
       safeTxHash,
       senderAddress: this.configService.get("AGENT1_ADDRESS") as string,
       senderSignature: senderSignature.data,
+    });
+
+    await this.prismaService.pendingTransaction.create({
+      data: {
+        multisigAddress: safeAddress,
+        chain,
+        transactionHash: safeTxHash,
+        status: TransactionStatus.PENDING,
+      },
     });
   }
 }
