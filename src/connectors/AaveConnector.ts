@@ -14,7 +14,8 @@ export class AaveConnector {
             const lendingPoolAddressProvider = AAVE_LENDING_POOL_ADDRESS_PROVIDER;
             const uiPoolDataProviderAddress = AAVE_UI_POOL_DATA_PROVIDER[chain as keyof typeof AAVE_UI_POOL_DATA_PROVIDER];
             
-            const provider = new ethers.JsonRpcProvider(process.env[`RPC_URL_${chain.toUpperCase()}`]); 
+            const provider = new ethers.JsonRpcProvider(process.env[`RPC_URL_${chain.toUpperCase()}`]);
+            
             const abi = JSON.parse(fs.readFileSync("abi/aave/IUiPoolDataProviderV3.json", 'utf8'));
             const uiPoolDataProvider = new ethers.Contract(uiPoolDataProviderAddress, abi, provider);
     

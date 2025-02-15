@@ -1,9 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsIn } from "class-validator";
-
-// Define the available chain values
-export const CHAINS = ["ARBITRUM", "BASE", "LINEA", "OPTIMISM", "AVALANCHE"] as const;
-export type Chain = (typeof CHAINS)[number];
+import { Chain, CHAINS } from "src/connectors/rpcConfig.service";
 
 export class CreateSafeDto {
   @ApiProperty({
