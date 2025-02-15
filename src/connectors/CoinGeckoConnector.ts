@@ -5,19 +5,12 @@ import { ethers } from 'ethers';
 
 dotenv.config();
 
-interface UserBalancesInfo {
-    chain: string;
-    tokenAddress: string;
-    amount: number;
-}
-
 export class CoinGeckoConnector {
 
-    async fetch(publicKey: string): Promise<TokenAmountInfo[]> {
+    async fetch(): Promise<TokenAmountInfo[]> {
         const results: TokenAmountInfo[] = [];
 
         for (const chain of CHAINS) {
-            const provider = new ethers.JsonRpcProvider(process.env[`RPC_URL_${chain.toUpperCase()}`]);
             const tokenAddresses = ASSETS[chain as keyof typeof ASSETS];
             let coinGeckoChain = chain;
             if (coinGeckoChain === "avalanche") {
@@ -34,11 +27,6 @@ export class CoinGeckoConnector {
 
             const response = await rawResponse.json();
             for (const token of response.data) {
-                const tokenContract = new ethers.Contract(token.attributes.address, [
-                    "function balanceOf(address owner) view returns (uint256)"
-                ], provider);
-                const amount = await tokenContract.balanceOf(publicKey);
-
                 results.push({
                     token: {
                         chain,
@@ -47,7 +35,7 @@ export class CoinGeckoConnector {
                         decimals: token.attributes.decimals
                     },
                     price: Number(token.attributes.price_usd),
-                    amount: Number(amount),
+                    amount: 0,
                     timestamp: Date.now()
                 });
             }

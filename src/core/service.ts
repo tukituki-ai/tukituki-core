@@ -2,13 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DeFiAgent } from './agent';
 import { LendingInfo, DexInfo, BridgeInfo, TokenAmountInfo, AgentResponse, RiskAssessment } from '../types/protocol';
+import { MultisigService } from 'src/multisig/multisig.service';
 
 @Injectable()
 export class DeFiService {
   private readonly agent: DeFiAgent;
 
-  constructor(private configService: ConfigService) {
-    this.agent = new DeFiAgent(this.configService);
+  constructor(private configService: ConfigService, private multisigService: MultisigService) {
+    this.agent = new DeFiAgent(this.configService, this.multisigService);
   }
 
   async getStrategy(

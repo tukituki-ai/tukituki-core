@@ -55,6 +55,7 @@ export class UniV3Connector {
                 results.push({
                     chain,
                     dex: "uniswap_v3",
+                    poolAddress: pool.address,
                     token0: {
                         chain,
                         asset: pool.token0.address,

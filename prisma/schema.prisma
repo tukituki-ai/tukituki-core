@@ -46,6 +46,21 @@ enum TransactionStatus {
   FAILED
 }
 
+model ActionLog {
+  id              String   @id @default(uuid())
+  userAddress     String // The user's wallet address
+  multisigAddress String // The deployed multisig address
+  chain           Chain // The chain where the multisig is deployed
+  action          String // The action that was taken
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  // Optional: ensure that a given user wallet has one multisig per chain.
+  @@unique([userAddress, chain])
+  // Optional: ensure that each multisig address is unique per chain.
+  @@unique([multisigAddress, chain])
+}
+
 enum Chain {
   OPTIMISM
   BASE

@@ -88,8 +88,32 @@ export class MultisigService {
     return safe.multisigAddress;
   }
 
+  async getAllClients() {
+    const dbResponse = await this.prismaService.userMultisig.findMany();
+    const result: any = {};
+    for (const row of dbResponse) {
+      result[row.userAddress] = {
+        chain: row.chain,
+        multisigAddress: row.multisigAddress,
+      };
+    }
+    return result;
+  }
+
+  async logAction(chain: Chain, userAddress: string, action: string, multisigAddress: string) {
+    await this.prismaService.actionLog.create({
+      data: {
+        chain,
+        userAddress,
+        action,
+        multisigAddress,
+      },
+    });
+  }
+
   async proposeTransaction(chain: Chain, userAddress: string, transaction: MetaTransactionData) {
     const safeAddress = await this.getSafeClient(chain, userAddress);
+    console.log("safeAddress:", safeAddress);
 
     const protocolKitOwner = await Safe.init({
       provider: this.rpcConfigService.getRpcUrl(chain),

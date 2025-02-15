@@ -1,7 +1,6 @@
-import { CHAINS } from "src/connectors/rpcConfig.service";
+import { Chain, CHAINS } from "src/connectors/rpcConfig.service";
 
 import { ApiProperty } from "@nestjs/swagger";
-import { Chain } from "../types/chains";
 import { IsEthereumAddress, IsHexadecimal, IsIn, IsString, ValidateNested } from "class-validator";
 import { Type } from "class-transformer";
 

@@ -11,13 +11,14 @@ import {
 import { SYSTEM_PROMPT } from '../prompts/system';
 import { formatMarketDataPrompt, VALIDATION_PROMPT } from '../prompts/market';
 import { ConfigService } from '@nestjs/config';
+import { MultisigService } from 'src/multisig/multisig.service';
 
 @Injectable()
 export class DeFiAgent {
   private openai: OpenAI;
   model = process.env.OPENAI_MODEL || 'gpt-4o-mini';
 
-  constructor(private configService: ConfigService) {
+  constructor(private configService: ConfigService, private multisigService: MultisigService) {
     const apiKey = this.configService.get<string>('OPENAI_API_KEY');
     if (!apiKey) {
       throw new Error('OPENAI_API_KEY not found');

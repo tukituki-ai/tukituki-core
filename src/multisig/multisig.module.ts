@@ -7,5 +7,6 @@ import { PrismaService } from "src/prisma/prisma.service";
 @Module({
   providers: [MultisigService, RpcConfigService, PrismaService],
   controllers: [MultisigController],
+  exports: [MultisigService],
 })
 export class MultisigModule {}
