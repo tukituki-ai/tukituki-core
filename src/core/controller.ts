@@ -6,6 +6,7 @@ import { CoinGeckoConnector } from 'src/connectors/CoinGeckoConnector';
 import { ethers } from 'ethers';
 import { ActionHandler } from 'src/handlers/ActionHandler';
 import { MultisigService } from 'src/multisig/multisig.service';
+import { CHAINS } from 'src/connectors/rpcConfig.service';
 
 @Controller('defi')
 export class DeFiController {
@@ -25,19 +26,26 @@ export class DeFiController {
     // @Body('protocolData') protocolData: ProtocolData[],
     // @Body('bridgeInfo') bridgeInfo: BridgeInfo[],
   ) {
-    const lendingInfo = await new AaveConnector().fetch();
-    const dexInfo = await new UniV3Connector().fetch();
-
     const allClients = await this.multisigService.getAllClients();
     for (const [userWallet, userInfo] of Object.entries(allClients)) {
+      const multisigAddress = (userInfo as any).multisigAddress;
+
+      const lendingInfo = await new AaveConnector().fetch();
+      const dexInfo = await new UniV3Connector().fetch();
       const tokensInfo = await new CoinGeckoConnector().fetch();
+      const actionHandler = new ActionHandler();
+
+      for (const chain of CHAINS) {
+        const multisigPositions = await actionHandler.fetchMultisigPositions(multisigAddress, chain);
+        console.log(multisigPositions);
+      }
+
       for (const token of tokensInfo) {
-        const multisigAddress = (userInfo as any).multisigAddress;
         token.amount = await this.fetchBalance(multisigAddress, token.token.asset, token.token.chain);
       }
 
       const strategy = await this.defiService.getStrategy(lendingInfo, dexInfo, [], tokensInfo);
-      await new ActionHandler().handle(strategy, userWallet, this.multisigService, tokensInfo);
+      await actionHandler.handle(strategy, userWallet, this.multisigService, tokensInfo, dexInfo);
     }
     return true;
   }

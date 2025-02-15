@@ -5,12 +5,6 @@ import { ethers } from 'ethers';
 
 dotenv.config();
 
-interface UserBalancesInfo {
-    chain: string;
-    tokenAddress: string;
-    amount: number;
-}
-
 export class CoinGeckoConnector {
 
     async fetch(): Promise<TokenAmountInfo[]> {
