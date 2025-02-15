@@ -17,7 +17,7 @@ export class MultisigController {
     const message = `Create safe for chain ${chain} with user ${userAddress}`;
 
     // Verify the signature using ethers.js
-    const recoveredAddress = ethers.verifyMessage(message, signature);
+    const recoveredAddress = ethers.utils.verifyMessage(message, signature);
     if (recoveredAddress.toLowerCase() !== userAddress.toLowerCase()) {
       throw new UnauthorizedException("Invalid signature.");
     }
@@ -31,7 +31,7 @@ export class MultisigController {
     const message = `Deploy Safe for ${userAddress}`;
 
     try {
-      const recoveredAddress = ethers.verifyMessage(message, signature);
+      const recoveredAddress = ethers.utils.verifyMessage(message, signature);
       if (recoveredAddress.toLowerCase() !== userAddress.toLowerCase()) {
         throw new UnauthorizedException("Invalid signature");
       }

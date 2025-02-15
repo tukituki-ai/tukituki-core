@@ -1,6 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsString, IsIn, IsEthereumAddress } from "class-validator";
-import { CHAINS, Chain } from "../types/chains";
+import { Chain } from "@prisma/client";
+import { CHAINS } from "src/connectors/rpcConfig.service";
 
 export class CreateSafeDto {
   @ApiProperty({
