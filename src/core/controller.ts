@@ -13,7 +13,7 @@ export class DeFiController {
   constructor(private readonly defiService: DeFiService, private readonly multisigService: MultisigService) {}
 
   async fetchBalance(userAddress: string, tokenAddress: string, chain: string): Promise<number> {
-    const provider = new ethers.JsonRpcProvider(process.env[`RPC_URL_${chain.toUpperCase()}`]);
+    const provider = new ethers.providers.JsonRpcProvider(process.env[`RPC_URL_${chain.toUpperCase()}`]);
     const tokenContract = new ethers.Contract(tokenAddress, [
       "function balanceOf(address owner) view returns (uint256)"
     ], provider);
