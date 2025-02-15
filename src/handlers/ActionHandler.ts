@@ -162,6 +162,7 @@ export class ActionHandler {
         const actions = llmResponse.actions;
 
         for (const action of actions) {
+            console.log(action);
             const tx = await this.createTx(action, userAddress, multisigService, tokensInfo, dexInfo);
             console.log(`Transaction proposed:`);
             console.log(tx);
