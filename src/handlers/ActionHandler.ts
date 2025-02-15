@@ -166,6 +166,8 @@ export class ActionHandler {
             const tx = await this.createTx(action, userAddress, multisigService, tokensInfo, dexInfo);
             console.log(`Transaction proposed:`);
             console.log(tx);
+            const multisigAddress = await multisigService.getSafeClient(action.chain.toUpperCase(), userAddress);
+            await multisigService.logAction(action.chain.toUpperCase(), userAddress, action, multisigAddress);
         }
     }
 }

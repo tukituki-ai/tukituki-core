@@ -99,6 +99,17 @@ export class MultisigService {
     return result;
   }
 
+  async logAction(chain: Chain, userAddress: string, action: string, multisigAddress: string) {
+    await this.prismaService.actionLog.create({
+      data: {
+        chain,
+        userAddress,
+        action,
+        multisigAddress,
+      },
+    });
+  }
+
   async proposeTransaction(chain: Chain, userAddress: string, transaction: MetaTransactionData) {
     const safeAddress = await this.getSafeClient(chain, userAddress);
     console.log("safeAddress:", safeAddress);
